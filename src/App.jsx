@@ -18,15 +18,41 @@ const App = () => {
   const fireworksIntervalRef = useRef(null);
   const schoolPrideAnimationRef = useRef(null);
 
-  const handleNumberClick = (number) => {
-    if (!showQuinaMessage && !markedNumbers.includes(number)) {
-      setCurrentNumber(number);
-      setMarkedNumbers(prev => [...prev, number]);
-      setPreviousNumbers(prev => [number, ...prev.slice(0, 4)]);
-      setAnimate(true);
-      setTimeout(() => setAnimate(false), 500);
-    }
+  // Función para resetear el juego
+  const resetGame = () => {
+    setCurrentNumber(null);
+    setMarkedNumbers([]);
+    setPreviousNumbers([]);
+    setAnimate(false);
   };
+
+  // Función para generar un número aleatorio no utilizado
+  const generateRandomNumber = () => {
+    if (markedNumbers.length >= 90) {
+      resetGame(); // Reseteamos cuando se han usado todos los números
+      return generateRandomNumber(); // Generamos el primer número del nuevo juego
+    }
+    
+    let number;
+    do {
+      number = Math.floor(Math.random() * 90) + 1;
+    } while (markedNumbers.includes(number));
+    return number;
+  };
+
+  // Manejador para marcar un nuevo número aleatorio
+  const handleNewNumber = useCallback(() => {
+    if (!showQuinaMessage) {
+      const newNumber = generateRandomNumber();
+      if (newNumber) {
+        setCurrentNumber(newNumber);
+        setMarkedNumbers(prev => [...prev, newNumber]);
+        setPreviousNumbers(prev => [newNumber, ...prev.slice(0, 4)]);
+        setAnimate(true);
+        setTimeout(() => setAnimate(false), 500);
+      }
+    }
+  }, [showQuinaMessage, markedNumbers]);
 
   const handleUndo = useCallback(() => {
     if (!showQuinaMessage && markedNumbers.length > 0) {
@@ -38,7 +64,23 @@ const App = () => {
     }
   }, [markedNumbers, showQuinaMessage]);
 
-  useKeyboardControls({ setShowLiniaCantada, setShowQuinaMessage, handleUndo });
+  // Efecto para manejar los controles de teclado
+  React.useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        handleNewNumber();
+      } else if (event.key === 'Backspace' || event.key === 'Delete') {
+        handleUndo();
+      } else if (event.key === 'l' || event.key === 'L') {
+        setShowLiniaCantada(prev => !prev);
+      } else if (event.key === 'q' || event.key === 'Q') {
+        setShowQuinaMessage(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [handleNewNumber, handleUndo]);
 
   React.useEffect(() => {
     if (showLiniaCantada) {
@@ -77,7 +119,7 @@ const App = () => {
       <div className={`large-box ${showQuinaMessage ? 'highlight' : ''}`}>
         <BingoBoard 
           markedNumbers={markedNumbers} 
-          onNumberClick={handleNumberClick} 
+          onNumberClick={() => {}} 
           showQuinaMessage={showQuinaMessage} 
         />
       </div>

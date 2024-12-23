@@ -225,3 +225,34 @@ body, html {
   z-index: 1000;
   position: relative;
 }
+/* Eliminar todos los efectos hover y cursor de los números */
+.number-cell {
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+.number-cell:hover {
+  background-color: inherit !important;
+  transform: none !important;
+  box-shadow: none !important;
+  cursor: default !important;
+}
+
+/* Asegurar que los números marcados tampoco tengan interactividad */
+.number-cell.marked {
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+.number-cell.marked:hover {
+  background-color: inherit !important;
+  transform: none !important;
+  box-shadow: none !important;
+  cursor: default !important;
+}
+
+/* Si tienes algún contenedor de números, también aseguramos que no tenga interactividad */
+.bingo-board .number-container {
+  cursor: default !important;
+  pointer-events: none !important;
+}
