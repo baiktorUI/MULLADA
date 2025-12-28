@@ -1,11 +1,10 @@
-import React from 'react';
-
 const BingoBoard = ({ markedNumbers, onNumberClick, showQuinaMessage }) => {
   return (
     <div className={`bingo-board ${showQuinaMessage ? 'disabled' : ''}`}>
-      {[...Array(90)].map((_, i) => {
-        const number = i + 1;
+      {[...Array(90)].map((_, index) => {
+        const number = index + 1;
         const isMarked = markedNumbers.includes(number);
+
         return (
           <div
             key={number}
