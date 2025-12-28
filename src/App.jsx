@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import './App.css';
 import BingoBoard from './components/BingoBoard';
 import CurrentNumber from './components/CurrentNumber';
@@ -9,7 +9,6 @@ import {
   startQuinaConfetti, 
   stopAllConfetti 
 } from './hooks/useConfetti';
-import StrictMode from 'react';
 
 function App() {
   const [currentNumber, setCurrentNumber] = useState(null);
@@ -19,8 +18,8 @@ function App() {
   const [showLiniaCantada, setShowLiniaCantada] = useState(false);
   const [showQuinaMessage, setShowQuinaMessage] = useState(false);
 
-  const liniaIntervalRef = { current: null };
-  const quinaIntervalRef = { current: null };
+  const liniaIntervalRef = useRef(null);
+  const quinaIntervalRef = useRef(null);
 
   // Función para marcar número con click
   const handleNumberClick = (number) => {
@@ -60,7 +59,7 @@ function App() {
   }, [markedNumbers, showQuinaMessage]);
 
   // Efectos de confeti
-  StrictMode.useEffect(() => {
+  useEffect(() => {
     if (showLiniaCantada) {
       startLiniaConfetti(liniaIntervalRef);
     } else {
@@ -68,7 +67,7 @@ function App() {
     }
   }, [showLiniaCantada]);
 
-  StrictMode.useEffect(() => {
+  useEffect(() => {
     if (showQuinaMessage) {
       startLiniaConfetti(liniaIntervalRef);
       startQuinaConfetti(quinaIntervalRef);
