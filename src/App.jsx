@@ -9,6 +9,7 @@ import {
   startQuinaConfetti, 
   stopAllConfetti 
 } from './hooks/useConfetti';
+import logo from './assets/logo.png';
 
 function App() {
   const [currentNumber, setCurrentNumber] = useState(null);
@@ -120,7 +121,7 @@ function App() {
       </div>
 
       <div className="additional-box">
-        <img src="/logo.png" alt="Logo UuhQE" className="logo-image" />
+        <img src={logo} alt="Logo UuhQE" className="logo-image" />
       </div>
     </div>
   );
