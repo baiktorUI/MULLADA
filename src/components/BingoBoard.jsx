@@ -1,4 +1,4 @@
-const BingoBoard = ({ markedNumbers, onNumberClick, showQuinaMessage }) => {
+const BingoBoard = ({ markedNumbers, showQuinaMessage }) => {
   return (
     <div className={`bingo-board ${showQuinaMessage ? 'disabled' : ''}`}>
       {[...Array(90)].map((_, index) => {
@@ -8,10 +8,9 @@ const BingoBoard = ({ markedNumbers, onNumberClick, showQuinaMessage }) => {
         return (
           <div
             key={number}
-            className={`bingo-number ${isMarked ? 'marked' : 'clickable'} ${
+            className={`bingo-number ${isMarked ? 'marked' : ''} ${
               !isMarked && showQuinaMessage ? 'faded' : ''
             }`}
-            onClick={() => !isMarked && !showQuinaMessage && onNumberClick(number)}
           >
             {number.toString().padStart(2, '0')}
           </div>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-const KeyboardControls = ({ setShowLiniaCantada, setShowQuinaMessage, handleUndo }) => {
+const KeyboardControls = ({ setShowLiniaCantada, setShowQuinaMessage, drawNextNumber }) => {
   const handleKeyPress = useCallback((event) => {
     switch (event.key.toLowerCase()) {
       case 'l':
@@ -9,20 +9,20 @@ const KeyboardControls = ({ setShowLiniaCantada, setShowQuinaMessage, handleUndo
       case 'q':
         setShowQuinaMessage(prev => !prev);
         break;
-      case 'backspace':
-        handleUndo();
+      case 'enter':
+        drawNextNumber();
         break;
       default:
         break;
     }
-  }, [setShowLiniaCantada, setShowQuinaMessage, handleUndo]);
+  }, [setShowLiniaCantada, setShowQuinaMessage, drawNextNumber]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
-  return null; // Este componente no renderiza nada
+  return null;
 };
 
 export default KeyboardControls;
