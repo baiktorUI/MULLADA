@@ -25,8 +25,12 @@ function App() {
 
   // Función para sacar el siguiente número aleatorio
   const drawNextNumber = useCallback(() => {
+    console.log('drawNextNumber llamado');
+    console.log('Números restantes:', remainingNumbers.length);
+    
     if (remainingNumbers.length === 0) {
       // Reiniciar cuando se completen todos los números
+      console.log('Reiniciando juego - todos los números cantados');
       setCurrentNumber(null);
       setPreviousNumbers([]);
       setMarkedNumbers([]);
@@ -37,6 +41,8 @@ function App() {
     // Seleccionar número aleatorio de los restantes
     const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
     const selectedNumber = remainingNumbers[randomIndex];
+    
+    console.log('Número seleccionado:', selectedNumber);
 
     // Actualizar estados
     setCurrentNumber(selectedNumber);
@@ -48,6 +54,11 @@ function App() {
     setAnimate(true);
     setTimeout(() => setAnimate(false), 500);
   }, [remainingNumbers]);
+
+  // Log cuando se monta el componente
+  useEffect(() => {
+    console.log('App montado');
+  }, []);
 
   // Efectos de confeti
   useEffect(() => {
