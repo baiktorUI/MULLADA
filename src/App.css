@@ -156,10 +156,6 @@ body, html {
   opacity: 0.3;
 }
 
-.bingo-number.clickable {
-  cursor: pointer;
-}
-
 .small-box {
   position: absolute;
   top: calc(24px + 111px + 14px + 482px + 14px);
@@ -216,7 +212,7 @@ body, html {
   font-size: 25px;
 }
 
-.bingo-board.disabled .bingo-number.clickable {
+.bingo-board.disabled .bingo-number {
   cursor: default;
   pointer-events: none;
 }
@@ -225,34 +221,18 @@ body, html {
   z-index: 1000;
   position: relative;
 }
-/* Eliminar todos los efectos hover y cursor de los números */
-.number-cell {
+
+/* Eliminar interactividad de los números */
+.bingo-number {
   cursor: default !important;
   pointer-events: none !important;
 }
 
-.number-cell:hover {
+.bingo-number:hover {
   background-color: inherit !important;
   transform: none !important;
-  box-shadow: none !important;
-  cursor: default !important;
 }
 
-/* Asegurar que los números marcados tampoco tengan interactividad */
-.number-cell.marked {
+.bingo-number.clickable {
   cursor: default !important;
-  pointer-events: none !important;
-}
-
-.number-cell.marked:hover {
-  background-color: inherit !important;
-  transform: none !important;
-  box-shadow: none !important;
-  cursor: default !important;
-}
-
-/* Si tienes algún contenedor de números, también aseguramos que no tenga interactividad */
-.bingo-board .number-container {
-  cursor: default !important;
-  pointer-events: none !important;
 }

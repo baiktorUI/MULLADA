@@ -15,6 +15,7 @@ function App() {
   const [currentNumber, setCurrentNumber] = useState(null);
   const [previousNumbers, setPreviousNumbers] = useState([]);
   const [markedNumbers, setMarkedNumbers] = useState([]);
+  const [remainingNumbers, setRemainingNumbers] = useState([...Array(90)].map((_, i) => i + 1));
   const [animate, setAnimate] = useState(false);
   const [showLiniaCantada, setShowLiniaCantada] = useState(false);
   const [showQuinaMessage, setShowQuinaMessage] = useState(false);
@@ -22,42 +23,31 @@ function App() {
   const liniaIntervalRef = useRef(null);
   const quinaIntervalRef = useRef(null);
 
-  // Función para marcar número con click
-  const handleNumberClick = (number) => {
-    // No permitir clicks si está activado el mensaje de Quina
-    if (showQuinaMessage || markedNumbers.includes(number)) {
+  // Función para sacar el siguiente número aleatorio
+  const drawNextNumber = useCallback(() => {
+    if (remainingNumbers.length === 0) {
+      // Reiniciar cuando se completen todos los números
+      setCurrentNumber(null);
+      setPreviousNumbers([]);
+      setMarkedNumbers([]);
+      setRemainingNumbers([...Array(90)].map((_, i) => i + 1));
       return;
     }
 
-    // Actualizar número actual
-    setCurrentNumber(number);
-    
-    // Añadir a marcados
-    setMarkedNumbers(prev => [...prev, number]);
-    
-    // Actualizar historial (máximo 5 números anteriores)
-    setPreviousNumbers(prev => [number, ...prev.slice(0, 4)]);
-    
+    // Seleccionar número aleatorio de los restantes
+    const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
+    const selectedNumber = remainingNumbers[randomIndex];
+
+    // Actualizar estados
+    setCurrentNumber(selectedNumber);
+    setMarkedNumbers(prev => [...prev, selectedNumber]);
+    setPreviousNumbers(prev => [selectedNumber, ...prev.slice(0, 4)]);
+    setRemainingNumbers(prev => prev.filter((_, idx) => idx !== randomIndex));
+
     // Activar animación
     setAnimate(true);
     setTimeout(() => setAnimate(false), 500);
-  };
-
-  // Función para deshacer último número
-  const handleUndo = useCallback(() => {
-    if (showQuinaMessage || markedNumbers.length === 0) {
-      return;
-    }
-
-    // Remover último número marcado
-    const newMarked = markedNumbers.slice(0, -1);
-    const newPrevious = newMarked.slice(-5);
-    const newCurrent = newMarked[newMarked.length - 1] || null;
-
-    setMarkedNumbers(newMarked);
-    setPreviousNumbers(newPrevious);
-    setCurrentNumber(newCurrent);
-  }, [markedNumbers, showQuinaMessage]);
+  }, [remainingNumbers]);
 
   // Efectos de confeti
   useEffect(() => {
@@ -82,7 +72,7 @@ function App() {
       <KeyboardControls 
         setShowLiniaCantada={setShowLiniaCantada}
         setShowQuinaMessage={setShowQuinaMessage}
-        handleUndo={handleUndo}
+        drawNextNumber={drawNextNumber}
       />
       
       <div className="current-number-box">
@@ -103,7 +93,6 @@ function App() {
       <div className={`large-box ${showQuinaMessage ? 'highlight' : ''}`}>
         <BingoBoard 
           markedNumbers={markedNumbers}
-          onNumberClick={handleNumberClick}
           showQuinaMessage={showQuinaMessage}
         />
       </div>
